@@ -17,7 +17,7 @@ namespace Concurrency
             log.LogInformation("Traveler {traveler} started their miserable life.", Id);
             while (!token.IsCancellationRequested)
             {
-                await Task.Delay(100, token);
+                //await Task.Delay(100, token);
                 City destination = GetDestination();
                 Station? nearestStation = GetNearestStation();
                 nearestStation.Transfer(destination, this);

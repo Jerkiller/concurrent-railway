@@ -38,16 +38,17 @@ namespace Concurrency
             Traveler Goofy = new(8, City.Padova, City.Verona, TimeSpan.FromMilliseconds(9_000));
 
             Task[] tasks = [
-                Train.StartTheJourney(token),
                 // Passengers
-                Easy.StartMiserableLife(token),
-                Littlemore.StartMiserableLife(token),
-                Normal.StartMiserableLife(token),
-                Hard.StartMiserableLife(token),
-                Harder.StartMiserableLife(token),
-                Evenharder.StartMiserableLife(token),
-                Mostofall.StartMiserableLife(token),
-                Goofy.StartMiserableLife(token),
+                Task.Run(() => Easy.StartMiserableLife(token), token),
+                Task.Run(() => Littlemore.StartMiserableLife(token), token),
+                Task.Run(() => Normal.StartMiserableLife(token), token),
+                Task.Run(() => Hard.StartMiserableLife(token), token),
+                Task.Run(() => Harder.StartMiserableLife(token), token),
+                Task.Run(() => Evenharder.StartMiserableLife(token), token),
+                Task.Run(() => Mostofall.StartMiserableLife(token), token),
+                Task.Run(() => Goofy.StartMiserableLife(token), token),
+                // Train
+                Task.Run(() => Train.StartTheJourney(token), token),
             ];
 
             await Task.WhenAll(tasks);

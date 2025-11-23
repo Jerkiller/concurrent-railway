@@ -43,7 +43,7 @@ namespace Concurrency
 
         public static async Task StartTheJourney(CancellationToken token)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(250), token);
+            // await Task.Delay(TimeSpan.FromMilliseconds(250), token);
             while (!token.IsCancellationRequested)
             {
                 log.LogInformation("{aboard} ~~{currentCity}~~", Aboard(), currentCity.ToString().ToUpperInvariant());
