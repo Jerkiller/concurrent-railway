@@ -4,7 +4,7 @@ namespace Concurrency
 {
     public static class Train
     {
-        private static City currentCity = City.Venezia;
+        private static City currentCity = Railway.paths[0].Place;
         private static readonly ILogger log = Logger.CreateLogger(nameof(Train));
         private static readonly List<Traveler> peopleOnBoard = [];
         public const int totalTrainCapacity = 4;
