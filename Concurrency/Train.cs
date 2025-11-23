@@ -52,9 +52,7 @@ namespace Concurrency
                     ?? throw new InvalidOperationException("Station not found.");
 
                 station.Calling(peopleOnBoard.Count);
-                await Task.Delay(100, token);
                 station.Boarding();
-                await Task.Delay(100, token);
                 station.Departing(peopleOnBoard.Count);
                 await Task.Delay(travelTime, token);
                 currentCity = nextCity;
