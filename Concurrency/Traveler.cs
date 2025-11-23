@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Concurrency
 {
@@ -22,11 +17,11 @@ namespace Concurrency
             log.LogInformation("Traveler {traveler} started their miserable life.", Id);
             while (!token.IsCancellationRequested)
             {
-                await Task.Delay(100);
+                await Task.Delay(100, token);
                 City destination = GetDestination();
                 Station? nearestStation = GetNearestStation();
-                await nearestStation.Transfer(destination, this);
-                await Task.Delay(WaitTime);
+                nearestStation.Transfer(destination, this);
+                await Task.Delay(WaitTime, token);
                 SwapDirections();
             }
         }

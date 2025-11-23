@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Concurrency
 {
     public static class Train
     {
-        public static City currentCity = City.Venezia;
+        private static City currentCity = City.Venezia;
         private static readonly ILogger log = Logger.CreateLogger(nameof(Train));
-        private static readonly List<Traveler> peopleOnBoard = new List<Traveler>();
+        private static readonly List<Traveler> peopleOnBoard = [];
         public const int totalTrainCapacity = 4;
 
         public static string Aboard()
@@ -50,7 +43,7 @@ namespace Concurrency
 
         public static async Task StartTheJourney(CancellationToken token)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(250));
+            await Task.Delay(TimeSpan.FromMilliseconds(250), token);
             while (!token.IsCancellationRequested)
             {
                 log.LogInformation("{aboard} ~~{currentCity}~~", Aboard(), currentCity.ToString().ToUpperInvariant());
@@ -59,11 +52,11 @@ namespace Concurrency
                     ?? throw new InvalidOperationException("Station not found.");
 
                 station.Calling(peopleOnBoard.Count);
-                await Task.Delay(100);
+                await Task.Delay(100, token);
                 station.Boarding();
-                await Task.Delay(100);
+                await Task.Delay(100, token);
                 station.Departing(peopleOnBoard.Count);
-                await Task.Delay(travelTime);
+                await Task.Delay(travelTime, token);
                 currentCity = nextCity;
                 
             }

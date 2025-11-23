@@ -1,10 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Concurrency
 {
@@ -17,9 +11,9 @@ namespace Concurrency
         private readonly object departureLock = new();
         private readonly object arrivalLock = new();
         private static readonly ILogger log = Logger.CreateLogger(nameof(Station));
-        public async Task Transfer(City destination, Traveler traveler)
+        public void Transfer(City destination, Traveler traveler)
         {
-            lock(departureLock)
+            lock (departureLock)
             {
                 while (!trainBoarding || currentlyOnTheTrain == Train.totalTrainCapacity)
                     Monitor.Wait(departureLock);
@@ -30,10 +24,10 @@ namespace Concurrency
             // alight on another station
             var station = Railway.GetStation(destination)
                 ?? throw new InvalidOperationException("Station not found.");
-            await station.Alight(destination, traveler);
+            station.Alight(destination, traveler);
         }
 
-        public async Task Alight(City destination, Traveler traveler)
+        public void Alight(City destination, Traveler traveler)
         {
             lock (arrivalLock)
             {
