@@ -48,10 +48,10 @@ namespace Concurrency
             log.LogInformation("{aboard}\t\t#{travelerId} has boarded", Aboard(), traveler.Id);
         }
 
-        public static async Task StartTheJourney()
+        public static async Task StartTheJourney(CancellationToken token)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(250));
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 log.LogInformation("{aboard} ~~{currentCity}~~", Aboard(), currentCity.ToString().ToUpperInvariant());
                 (City nextCity, TimeSpan travelTime) = Railway.GetNextCityInfo(currentCity);

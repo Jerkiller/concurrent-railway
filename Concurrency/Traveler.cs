@@ -17,10 +17,10 @@ namespace Concurrency
         private static readonly ILogger log = Logger.CreateLogger(nameof(Traveler));
         private Direction currentDirection = Direction.ToWork;
 
-        public async Task StartMiserableLife()
+        public async Task StartMiserableLife(CancellationToken token)
         {
             log.LogInformation("Traveler {traveler} started their miserable life.", Id);
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 await Task.Delay(100);
                 City destination = GetDestination();

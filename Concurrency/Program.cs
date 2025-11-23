@@ -1,28 +1,57 @@
-﻿using Concurrency;
+﻿using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
-Console.WriteLine("Railway simulation");
+namespace Concurrency
+{
+    public class Program
+    {
+        private static readonly ILogger log = Logger.CreateLogger(nameof(Program));
+        private static CancellationTokenSource cts = new CancellationTokenSource();
+        public static async Task Main(string[] args)
+        {
 
-Traveler Easy = new (1, City.Verona, City.Venezia, TimeSpan.FromMilliseconds(10_000));
-Traveler Littlemore = new (2, City.Vicenza, City.Padova, TimeSpan.FromMilliseconds(11_000));
-Traveler Normal = new (3, City.Padova, City.Verona, TimeSpan.FromMilliseconds(12_000));
-Traveler Hard = new (4, City.Venezia, City.Vicenza, TimeSpan.FromMilliseconds(13_000));
-Traveler Harder = new (5, City.Padova, City.Verona, TimeSpan.FromMilliseconds(14_000));
-Traveler Evenharder = new (6, City.Verona, City.Mestre, TimeSpan.FromMilliseconds(15_000));
-Traveler Mostofall = new (7, City.Mestre, City.Vicenza, TimeSpan.FromMilliseconds(16_000));
-Traveler Goofy = new (8, City.Padova, City.Verona, TimeSpan.FromMilliseconds(9_000));
+            Console.CancelKeyPress += (sender, eventArgs) =>
+            {
+                log.LogInformation("Cancel event triggered");
+                cts.Cancel();
+                eventArgs.Cancel = true;
+            };
 
-Task[] tasks = [
-    Train.StartTheJourney(),
-    // Passengers
-    Easy.StartMiserableLife(),
-    Littlemore.StartMiserableLife(),
-    Normal.StartMiserableLife(),
-    Hard.StartMiserableLife(),
-    Harder.StartMiserableLife(),
-    Evenharder.StartMiserableLife(),
-    Mostofall.StartMiserableLife(),
-    Goofy.StartMiserableLife(),
-];
+            await RailwaySimulation(cts.Token);
 
-await Task.WhenAll(tasks);
+            log.LogInformation("Now shutting down");
+            await Task.Delay(1000);
+
+        }
+
+        public static async Task RailwaySimulation(CancellationToken token)
+        {
+
+            log.LogInformation("Railway simulation");
+
+            Traveler Easy = new(1, City.Verona, City.Venezia, TimeSpan.FromMilliseconds(10_000));
+            Traveler Littlemore = new(2, City.Vicenza, City.Padova, TimeSpan.FromMilliseconds(11_000));
+            Traveler Normal = new(3, City.Padova, City.Verona, TimeSpan.FromMilliseconds(12_000));
+            Traveler Hard = new(4, City.Venezia, City.Vicenza, TimeSpan.FromMilliseconds(13_000));
+            Traveler Harder = new(5, City.Padova, City.Verona, TimeSpan.FromMilliseconds(14_000));
+            Traveler Evenharder = new(6, City.Verona, City.Mestre, TimeSpan.FromMilliseconds(15_000));
+            Traveler Mostofall = new(7, City.Mestre, City.Vicenza, TimeSpan.FromMilliseconds(16_000));
+            Traveler Goofy = new(8, City.Padova, City.Verona, TimeSpan.FromMilliseconds(9_000));
+
+            Task[] tasks = [
+                Train.StartTheJourney(token),
+                // Passengers
+                Easy.StartMiserableLife(token),
+                Littlemore.StartMiserableLife(token),
+                Normal.StartMiserableLife(token),
+                Hard.StartMiserableLife(token),
+                Harder.StartMiserableLife(token),
+                Evenharder.StartMiserableLife(token),
+                Mostofall.StartMiserableLife(token),
+                Goofy.StartMiserableLife(token),
+            ];
+
+            await Task.WhenAll(tasks);
+        }
+    }
+}
