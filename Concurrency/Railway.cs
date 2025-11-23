@@ -1,5 +1,4 @@
-﻿
-namespace Concurrency
+﻿namespace Concurrency
 {
     public static class Railway
     {
@@ -25,8 +24,9 @@ namespace Concurrency
         {
             var currentPath = paths.First(p => p.Place == city);
             var currentIndex = Array.IndexOf(paths, currentPath);
-            var (Place, DistanceToTheNext) = paths.ElementAt((currentIndex + 1) % paths.Length);
-            return (Place, currentPath.DistanceToTheNext);
+            var nextIndex = (currentIndex + 1) % paths.Length;
+            var (nextPlace, _) = paths[nextIndex];
+            return (nextPlace, currentPath.DistanceToTheNext);
         }
 
         public static Station? GetStation(City city) => city switch

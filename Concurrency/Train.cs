@@ -26,7 +26,7 @@ namespace Concurrency
             }
 
             peopleOnBoard.Remove(traveler);
-            log.LogInformation("{aboard}\t\t#{travelerId} has left", Aboard(), traveler.Id);
+            log.LogInformation("{Aboard}\t\t#{TravelerId} has left", Aboard(), traveler.Id);
         }
 
 
@@ -38,15 +38,14 @@ namespace Concurrency
             }
 
             peopleOnBoard.Add(traveler);
-            log.LogInformation("{aboard}\t\t#{travelerId} has boarded", Aboard(), traveler.Id);
+            log.LogInformation("{Aboard}\t\t#{TravelerId} has boarded", Aboard(), traveler.Id);
         }
 
         public static async Task StartTheJourney(CancellationToken token)
         {
-            // await Task.Delay(TimeSpan.FromMilliseconds(250), token);
             while (!token.IsCancellationRequested)
             {
-                log.LogInformation("{aboard} ~~{currentCity}~~", Aboard(), currentCity.ToString().ToUpperInvariant());
+                log.LogInformation("{Aboard} ~~{CurrentCity}~~", Aboard(), currentCity.ToString().ToUpperInvariant());
                 (City nextCity, TimeSpan travelTime) = Railway.GetNextCityInfo(currentCity);
                 var station = Railway.GetStation(currentCity)
                     ?? throw new InvalidOperationException("Station not found.");

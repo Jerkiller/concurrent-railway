@@ -14,10 +14,9 @@ namespace Concurrency
 
         public async Task StartMiserableLife(CancellationToken token)
         {
-            log.LogInformation("Traveler {traveler} started their miserable life.", Id);
+            log.LogInformation("Traveler {TravelerId} started their miserable life.", Id);
             while (!token.IsCancellationRequested)
             {
-                //await Task.Delay(100, token);
                 City destination = GetDestination();
                 Station? nearestStation = GetNearestStation();
                 nearestStation.Transfer(destination, this);
